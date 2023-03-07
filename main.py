@@ -1,6 +1,14 @@
 from playwright.sync_api import sync_playwright, Playwright
 from crawler.link_crawler import download_assets
 import json
+import asyncio
+
+
+async def save_page(content: str, file_name: str) -> None:
+    print("\n\033[0;96m Saving page... \033[0m")
+    with open(f"res/{file_name}.html", "w") as f:
+        f.write(content)
+    f.close()
 
 
 def test_json() -> None:
@@ -26,7 +34,7 @@ def run(playwright: Playwright) -> None:
     page.goto("https://www.classcentral.com")
     page.wait_for_load_state("load", timeout=0)
     browser.stop_tracing()
-    # save_page(page.content())
+    asyncio.create_task(save_page(page.content(), "index"))
     print("\033[0;35m Waiting for download operation \033[0m")
     test_json()
     link_list = [x.get_attribute("href") for x in page.locator("a").all()]
