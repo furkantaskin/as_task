@@ -1,21 +1,24 @@
 from playwright.sync_api import sync_playwright, Playwright
+from crawler.link_crawler import download_assets
 import json
 
 
-def test_json():
+def test_json() -> list:
     with open("chrome_traces/trace.json", "r") as f:
         data = json.load(f)
+        f.close()
     urls = []
     for i in data['traceEvents']:
         try:
             if "args" in i.keys() and "data" in i["args"].keys() and "renderBlocking" in i["args"]["data"].keys():
-                print(i["args"]["data"]["url"])
                 urls.append(i["args"]["data"]["url"])
         except KeyError:
             print("Error for object: ", i)
+    return urls
 
 
-def run(playwright: Playwright) -> None:
+def run(playwright: Playwright) -> list:
+    print("\033[0;35m Running playwright for crawling \033[0m")
     browser = playwright.chromium.launch(headless=False)
     context = browser.new_context()
     page = context.new_page()
@@ -26,8 +29,12 @@ def run(playwright: Playwright) -> None:
     # save_page(page.content())
     context.close()
     browser.close()
-    test_json()
+    return test_json()
 
+
+my_urls = None
 
 with sync_playwright() as p:
-    run(p)
+    my_urls = run(p)
+
+download_assets(my_urls)

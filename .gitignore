@@ -132,3 +132,4 @@ dmypy.json
 temp_data/
 .DS_Store
 .idea/
+example-*.py

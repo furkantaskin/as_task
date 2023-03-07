@@ -9,3 +9,4 @@ requests==2.28.2
 soupsieve==2.4
 typing_extensions==4.5.0
 urllib3==1.26.14
+cloudscraper~=1.2.69
