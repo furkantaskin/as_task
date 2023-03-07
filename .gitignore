@@ -129,7 +129,6 @@ dmypy.json
 .pyre/
 
 # Personal
-temp_data/
 .DS_Store
 .idea/
 example-*.py
