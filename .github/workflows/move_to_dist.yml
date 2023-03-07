@@ -17,7 +17,7 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git checkout -b dist
-        git rm -r --cached res
+        git rm -r --cached --exclude=res .
         git add .
         git commit -m "Move res folder to dist branch"
         git push --set-upstream origin dist
