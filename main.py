@@ -3,7 +3,7 @@ from crawler.link_crawler import download_assets
 import json
 
 
-def test_json() -> list:
+def test_json() -> None:
     with open("chrome_traces/trace.json", "r") as f:
         data = json.load(f)
         f.close()
@@ -14,10 +14,10 @@ def test_json() -> list:
                 urls.append(i["args"]["data"]["url"])
         except KeyError:
             print("Error for object: ", i)
-    return urls
+    download_assets(urls)
 
 
-def run(playwright: Playwright) -> list:
+def run(playwright: Playwright) -> None:
     print("\033[0;35m Running playwright for crawling \033[0m")
     browser = playwright.chromium.launch(headless=False)
     context = browser.new_context()
@@ -27,14 +27,14 @@ def run(playwright: Playwright) -> list:
     page.wait_for_load_state("load", timeout=0)
     browser.stop_tracing()
     # save_page(page.content())
-    context.close()
-    browser.close()
-    return test_json()
+    print("\033[0;35m Waiting for download operation \033[0m")
+    test_json()
+    link_list = [x.get_attribute("href") for x in page.locator("a").all()]
+    with open("temp_data/links.txt", "w") as f:
+        for link in link_list:
+            f.write(link + "\n")
+        f.close()
 
-
-my_urls = None
 
 with sync_playwright() as p:
-    my_urls = run(p)
-
-download_assets(my_urls)
+    run(p)
