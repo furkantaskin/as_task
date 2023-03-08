@@ -1,10 +1,16 @@
-import cloudscraper
+import requests
 import os
+import time
 
-scraper = cloudscraper.create_scraper()
+
+def use_proxy(address: str) -> str:
+    proxy = "http://bb19356aa3844a8d03733d5a6d0cd393d148e256:@proxy.zenrows.com:8001"
+    proxies = {"http": proxy, "https": proxy}
+    response = requests.get(address, proxies=proxies, verify=False)
+    return response.text
 
 
-def download_assets(url_list: list) -> bool:
+def download_assets():
     """
 
     It will download the assets from the list of urls provided. It will create a folder for each domain name extracted
@@ -13,10 +19,13 @@ def download_assets(url_list: list) -> bool:
 
     @todo Fix structure for assets which has another subfolder. Example http://www.example.com/assets/js/assetname.js
 
-    :param url_list: List of urls to download
     :return: True if all urls were downloaded successfully
 
     """
+
+    with open("../temp_data/asset_list.txt", "r", encoding="utf-8") as f:
+        url_list = [*set(f.readlines())]
+        f.close()
 
     print("\033[0;35m Downloading assets... \033[0m")
     # For each url in the list, download the file and save it in the res folder.
@@ -25,23 +34,39 @@ def download_assets(url_list: list) -> bool:
         try:
             if "classcentral.com" in url:
                 # Generate progress bar with length of files to download
-                square = "#" * i
-                underscore = "_" * (len(url_list) - i)
-                print("\r", end=f"\033[0;93m {square+underscore} Downloading: \033[0m {url}")
+
+                print("\r", end=f"\033[0;93m ({i}/{len(url_list)}) Downloading: \033[0m {url}")
 
                 # Generate file name and folder name from the url
-                file_name = url.split("/")[-1]
-                file_folder: str = url.split("/")[3]
+                file_name = url.split("/")[-1].replace("\n", "")
+                temp_folder = url.split("/")
+                file_dir = "/".join(temp_folder[3:-1])
+                print("Create folder: ", file_dir)
 
-                # Create folder if not exists and save the file
-                os.makedirs(f"res/{file_folder}", exist_ok=True)
-
+                for f_name in temp_folder[3:-1]:
+                    folder_dir = "/".join(temp_folder[3:temp_folder.index(f_name) + 1])
+                    print("Creating folder: ", folder_dir)
+                    os.makedirs(f"../docs/{folder_dir}", exist_ok=True)
                 # Download the file and save it in the specified folder
-                with open(f"res/{file_folder}/{file_name}", "wb", encoding="utf-8") as f:
-                    f.write(scraper.get(url).content)
+
+                with open(f"../docs/{file_dir}/{file_name.split('?')[0] if '?' in file_name else file_name}", "w",
+                          encoding="utf-8") as f:
+                    if file_name.split('.')[-1] != "woff2":
+                        result = use_proxy(url.replace("\n", ""))
+                        f.write(result)
+                    else:
+                        print("\033[0;93m Skipping woff2 file \033[0m")
                     f.close()
 
+                time.sleep(5)
+            else:
+                print("\r", end=f"\033[0;93m ({i}/{len(url_list)}) Skipping: \033[0m {url}")
+
         except IndexError as e:
-            print(f"Error for {url}: Reason: {e}")
+            print(f"IndexError for {url}: Reason: {e}")
             return False
+
     return True
+
+
+download_assets()
