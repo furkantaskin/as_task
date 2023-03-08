@@ -1,5 +1,4 @@
 from playwright.sync_api import sync_playwright, Playwright
-from app.link_crawler import download_assets
 from app.link_browser import edit_link
 from app.html_generator import save_page
 import json
@@ -29,7 +28,7 @@ def trace_json(file_name: str) -> None:
 
     """
 
-    with open(f"chrome_traces/{file_name}", "r") as f:
+    with open(f"chrome_traces/{file_name}", "r", encoding="utf-8") as f:
         data = json.load(f)
         f.close()
     urls = []
@@ -43,7 +42,7 @@ def trace_json(file_name: str) -> None:
         except KeyError:
             print("Error for object: ", i)
     # download_assets(urls)
-    with open("temp_data/asset_list.txt", "a") as f:
+    with open("temp_data/asset_list.txt", "a", encoding="utf-8") as f:
         for url in urls:
             f.writelines(url + "\n")
         f.close()
@@ -82,7 +81,7 @@ def run(playwright: Playwright) -> None:
 
     # Print all links in the page to file
     link_list = [x.get_attribute("href") for x in page.locator("a").all()]
-    with open("temp_data/links.txt", "w") as f:
+    with open("temp_data/links.txt", "w", encoding="utf-8") as f:
         for link in link_list:
             f.write(link + "\n")
         f.close()
@@ -91,7 +90,7 @@ def run(playwright: Playwright) -> None:
 
     # Visit the links and save the html files
     url_list = []
-    with open("temp_data/links_new.txt", "r") as f:
+    with open("temp_data/links_new.txt", "r", encoding="utf-8") as f:
         url_list = f.readlines()
         f.close()
 
