@@ -1,10 +1,10 @@
+from decouple import config
 import requests
 import os
 import time
 
-
 def use_proxy(address: str) -> str:
-    proxy = "http://bb19356aa3844a8d03733d5a6d0cd393d148e256:@proxy.zenrows.com:8001"
+    proxy = config("PROXY")
     proxies = {"http": proxy, "https": proxy}
     response = requests.get(address, proxies=proxies, verify=False)
     return response.text
