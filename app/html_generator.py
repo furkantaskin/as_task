@@ -6,16 +6,16 @@ async def save_page(content: str, file_name: str, length: int) -> bool:
     try:
         if length == 2:
             os.makedirs(f"docs/{file_name.split('/')[0]}", exist_ok=True)
-            with open(f"docs/{file_name}.html", "w") as f:
+            with open(f"docs/{file_name}.html", "w", encoding="utf-8") as f:
                 f.write(content)
                 f.close()
         elif length == 3:
             os.makedirs(f"docs/{file_name.split('/')[0]}/{file_name.split('/')[1]}", exist_ok=True)
-            with open(f"docs/{file_name}.html", "w") as f:
+            with open(f"docs/{file_name}.html", "w", encoding="utf-8") as f:
                 f.write(content)
                 f.close()
         else:
-            with open(f"docs/{file_name}.html", "w") as f:
+            with open(f"docs/{file_name}.html", "w", encoding="utf-8") as f:
                 f.write(content)
                 f.close()
     except Exception as e:

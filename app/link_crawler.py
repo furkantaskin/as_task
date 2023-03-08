@@ -37,7 +37,7 @@ def download_assets(url_list: list) -> bool:
                 os.makedirs(f"res/{file_folder}", exist_ok=True)
 
                 # Download the file and save it in the specified folder
-                with open(f"res/{file_folder}/{file_name}", "wb") as f:
+                with open(f"res/{file_folder}/{file_name}", "wb", encoding="utf-8") as f:
                     f.write(scraper.get(url).content)
                     f.close()
 

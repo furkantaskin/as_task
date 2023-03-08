@@ -18,7 +18,7 @@ def edit_link():
     print("\033[0;96m Editing links \033[0m")
 
     # Read the links from the file
-    with open("temp_data/links.txt", "r") as f:
+    with open("temp_data/links.txt", "r", encoding="utf-8") as f:
         links = f.readlines()
         f.close()
 
@@ -29,7 +29,7 @@ def edit_link():
             links[index] = link.replace(" ", "")
 
     # Write new links to file
-    with open("temp_data/links_new.txt", "w") as f:
+    with open("temp_data/links_new.txt", "w", encoding="utf-8") as f:
         print("\033[0;96m Saving links to file \033[0m")
         for link in [*set(links)]:
             f.write(link)
