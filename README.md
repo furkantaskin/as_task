@@ -95,5 +95,6 @@ I connected my Netlify account to GitHub and deployed the application. I used Ne
 
 I want to thank Coding Allstars for this amazing opportunity. I learned a lot from this task and I am sure that I can do better in the future. I am looking forward to hearing from you. Thank you.
 
+Simple diagram for these steps can be found [here](https://whimsical.com/coding-allstars-9NdGoAsGiksoUpRN4SezqC)
 
 Repo for JS operations is [here](https://github.com/furkantaskin/as_task_js)
